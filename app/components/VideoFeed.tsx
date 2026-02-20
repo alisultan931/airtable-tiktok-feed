@@ -133,9 +133,22 @@ export default function VideoFeed({ records }: any) {
 
               {/* Toggle Button */}
               <button
-                onClick={() =>
-                  setOpenIndex(openIndex === video.key ? null : video.key)
-                }
+                onClick={(e) => {
+  const newKey = openIndex === video.key ? null : video.key;
+  setOpenIndex(newKey);
+
+  if (newKey) {
+    const target = e.currentTarget; // store BEFORE timeout
+
+    setTimeout(() => {
+      const card = target?.closest(".snap-card");
+      card?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 200);
+  }
+}}
                 className="mt-2 text-yellow-400 hover:underline"
               >
                 {openIndex === video.key ? "Hide Info" : "Show Info"}
