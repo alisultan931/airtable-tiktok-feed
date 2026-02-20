@@ -99,7 +99,7 @@ export default function VideoFeed({ records }: any) {
       </div>
 
       {/* ================= FEED ================= */}
-      <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory bg-gradient-to-b from-black to-zinc-900 pb-20 md:pb-10">
+      <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory scroll-smooth overscroll-y-contain bg-gradient-to-b from-black to-zinc-900 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found for this date.
@@ -108,9 +108,9 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-start flex flex-col items-center pt-20 pb-10 px-4 bg-black"
+              className="snap-center flex flex-col items-center px-4 py-8"
             >
-            <div className="w-full max-w-md mx-auto overflow-hidden rounded-lg bg-black">
+            <div className="w-full max-w-md mx-auto rounded-lg overflow-hidden bg-black">
               <iframe
                 src={`https://www.tiktok.com/embed/${video.id}`}
                 className="w-full h-[65vh] md:h-[580px]"
