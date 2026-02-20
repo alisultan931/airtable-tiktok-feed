@@ -20,9 +20,9 @@ export default function VideoFeed({ records }: any) {
   });
 
   return (
-    <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
+    <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory">
       {/* ================= HEADER ================= */}
-      <div className="sticky top-0 z-50 bg-black/95 backdrop-blur-md px-4 py-2 shadow-md">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-md px-4 py-2 pt-[env(safe-area-inset-top)] shadow-md">
         <div className="flex items-center justify-between gap-3">
           
           {/* Branding */}
