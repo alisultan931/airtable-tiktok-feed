@@ -59,40 +59,41 @@ export default function VideoFeed({ records }: any) {
             Mojo’s Daily TikTok Dig
           </h1>
 
-          <div className="relative flex items-center">
+          <div className="flex items-center gap-2 relative">
 
-  {/* Styled visible button */}
-  <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm pointer-events-none">
-    {filterDate
-      ? new Date(filterDate).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })
-      : "FILTER BY DATE"}
+  {/* Wrapper ONLY for the date button */}
+  <div className="relative">
+
+    {/* Visible Styled Button */}
+    <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm">
+      {filterDate
+        ? new Date(filterDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "FILTER BY DATE"}
+    </div>
+
+    {/* Native input only covering button */}
+    <input
+      type="date"
+      value={filterDate}
+      onChange={(e) => setFilterDate(e.target.value)}
+      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+    />
   </div>
 
-  {/* Native iOS date input overlay */}
-  <input
-    type="date"
-    value={filterDate}
-    onChange={(e) => setFilterDate(e.target.value)}
-    className="
-      absolute inset-0
-      w-full h-full
-      opacity-0
-      cursor-pointer
-    "
-  />
-
+  {/* Clear button OUTSIDE overlay */}
   {filterDate && (
     <button
       onClick={() => setFilterDate("")}
-      className="ml-2 px-2 py-1 bg-gray-700 text-white rounded text-xs hover:bg-gray-600 transition"
+      className="px-3 py-1 bg-black text-yellow-400 rounded hover:bg-zinc-900 transition text-sm"
     >
       Clear
     </button>
   )}
+
 </div>
         </div>
       </div>
@@ -109,12 +110,14 @@ export default function VideoFeed({ records }: any) {
               key={video.key}
               className="snap-start flex flex-col items-center pt-20 pb-10 px-4 bg-black"
             >
+            <div className="w-full max-w-md mx-auto overflow-hidden rounded-lg bg-black">
               <iframe
                 src={`https://www.tiktok.com/embed/${video.id}`}
-                className="w-full max-w-md mx-auto rounded-lg"
-                height="580"
+                className="w-full h-[65vh] md:h-[580px]"
                 allowFullScreen
+                loading="lazy"
               />
+              </div>
 
               <h2 className="border-b-2 border-yellow-400 pb-1 text-xl font-bold mt-4 text-white text-center">
                 {video.title}
