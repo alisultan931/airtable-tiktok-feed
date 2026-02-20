@@ -38,7 +38,18 @@ export default async function Home() {
                   {record.fields.Title}
                 </h2>
 
-                <p className="text-gray-600">
+                <p className="text-sm text-gray-400">
+                  {new Date(record.fields["Date Added"]).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
+                </p>
+
+                <p className="text-gray-600 mt-2">
                   {record.fields.Insight}
                 </p>
               </div>
