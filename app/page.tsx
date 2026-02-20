@@ -1,3 +1,5 @@
+import VideoFeed from "./components/VideoFeed";
+
 async function getVideos() {
   const res = await fetch(
     `https://api.airtable.com/v0/${process.env.BASE_ID}/${process.env.TABLE_NAME}`,
@@ -16,46 +18,5 @@ async function getVideos() {
 export default async function Home() {
   const records = await getVideos();
 
-  return (
-    <main className="p-6">
-      {records.map((record: any, idx: number) =>
-        record.fields["Raw Video URLs"]
-          ?.split("\n")
-          .filter(Boolean)
-          .map((url: string, i: number) => {
-            const id = url.split("/video/")[1]?.split("?")[0];
-
-            return (
-              <div key={`${idx}-${i}`} className="mb-12">
-                <iframe
-                  src={`https://www.tiktok.com/embed/${id}`}
-                  width="325"
-                  height="580"
-                  allowFullScreen
-                />
-
-                <h2 className="text-xl font-bold mt-4">
-                  {record.fields.Title}
-                </h2>
-
-                <p className="text-sm text-gray-400">
-                  {new Date(record.fields["Date Added"]).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
-                </p>
-
-                <p className="text-gray-600 mt-2">
-                  {record.fields.Insight}
-                </p>
-              </div>
-            );
-          })
-      )}
-    </main>
-  );
+  return <VideoFeed records={records} />;
 }
