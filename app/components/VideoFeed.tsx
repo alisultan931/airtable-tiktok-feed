@@ -20,41 +20,45 @@ export default function VideoFeed({ records }: any) {
   });
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
+    <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
       {/* Date Filter + Header */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md px-6 py-4 mb-6 shadow-lg">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          
-          {/* Branding */}
-          <h1 className="text-xl md:text-2xl font-bold text-white">
-            Mojo’s Daily TikTok Dig
-          </h1>
+      <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md px-4 py-3 shadow-lg">
 
-          {/* Filters */}
-          <div className="flex items-center gap-3">
-            <label className="text-white text-sm font-medium whitespace-nowrap">
-              Filter by date:
-            </label>
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
 
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="border border-gray-600 rounded px-3 py-2 bg-transparent text-white
-                         [&::-webkit-calendar-picker-indicator]:invert"
-            />
+    {/* Branding */}
+    <h1 className="text-lg md:text-2xl font-bold text-white">
+      Mojo’s Daily TikTok Dig
+    </h1>
 
-            {filterDate && (
-              <button
-                onClick={() => setFilterDate("")}
-                className="px-3 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+    {/* Filters */}
+    <div className="flex items-center gap-2 flex-wrap">
+
+      <span className="text-gray-300 text-sm">
+        Filter:
+      </span>
+
+      <input
+        type="date"
+        value={filterDate}
+        onChange={(e) => setFilterDate(e.target.value)}
+        className="border border-gray-600 rounded px-2 py-1 bg-transparent text-white text-sm
+                   [&::-webkit-calendar-picker-indicator]:invert"
+      />
+
+      {filterDate && (
+        <button
+          onClick={() => setFilterDate("")}
+          className="px-2 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-600 transition"
+        >
+          Clear
+        </button>
+      )}
+
+    </div>
+
+  </div>
+</div>
 
       {filteredRecords.length === 0 ? (
         <p className="text-center text-gray-400 mt-10">
@@ -73,11 +77,11 @@ export default function VideoFeed({ records }: any) {
               return (
                 <div
                   key={uniqueKey}
-                  className="mb-12 bg-gray-900 rounded-2xl shadow-lg p-4 transition transform hover:scale-[1.01] hover:shadow-xl"
+                  className="snap-start min-h-screen flex flex-col items-center md:justify-center justify-start pt-24 md:pt-28 pb-16 px-4 bg-gray-900"
                 >
                   <iframe
                     src={`https://www.tiktok.com/embed/${id}`}
-                    className="w-full max-w-md mx-auto"
+                    className="w-full max-w-md mx-auto rounded-lg"
                     height="580"
                     allowFullScreen
                   />
@@ -113,7 +117,7 @@ export default function VideoFeed({ records }: any) {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <p className="text-gray-400">
+                    <p className="text-gray-400 mt-4 max-w-lg mx-auto text-center leading-relaxed break-words px-2 text-sm md:text-base">
                       {record.fields.Insight}
                     </p>
                   </div>
