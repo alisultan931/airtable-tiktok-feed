@@ -60,42 +60,32 @@ export default function VideoFeed({ records }: any) {
           </h1>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                if (dateInputRef.current?.showPicker) {
-                  dateInputRef.current.showPicker();
-                } else {
-                  dateInputRef.current?.click();
-                }
-              }}
-              className="px-3 py-1 bg-black text-yellow-400 rounded hover:bg-zinc-900 transition cursor-pointer"
-            >
-              {filterDate
-                ? new Date(filterDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : "FILTER BY DATE"}
-            </button>
+  <input
+  type="date"
+  value={filterDate}
+  onChange={(e) => setFilterDate(e.target.value)}
+  className="
+    px-3 py-1
+    bg-black text-yellow-400
+    rounded
+    border border-yellow-400/40
+    focus:outline-none focus:ring-2 focus:ring-yellow-400
+    cursor-pointer
+  "
+  style={{
+    colorScheme: "dark",
+  }}
+/>
 
-            <input
-              ref={dateInputRef}
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="hidden"
-            />
-
-            {filterDate && (
-              <button
-                onClick={() => setFilterDate("")}
-                className="px-2 py-1 bg-gray-700 text-white rounded text-xs"
-              >
-                Clear
-              </button>
-            )}
-          </div>
+  {filterDate && (
+    <button
+      onClick={() => setFilterDate("")}
+      className="px-2 py-1 bg-gray-700 text-white rounded text-xs"
+    >
+      Clear
+    </button>
+  )}
+</div>
         </div>
       </div>
 
