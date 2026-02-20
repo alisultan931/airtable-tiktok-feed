@@ -59,28 +59,36 @@ export default function VideoFeed({ records }: any) {
             Mojo’s Daily TikTok Dig
           </h1>
 
-          <div className="flex items-center gap-2">
+          <div className="relative flex items-center">
+
+  {/* Styled visible button */}
+  <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm pointer-events-none">
+    {filterDate
+      ? new Date(filterDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
+      : "FILTER BY DATE"}
+  </div>
+
+  {/* Native iOS date input overlay */}
   <input
-  type="date"
-  value={filterDate}
-  onChange={(e) => setFilterDate(e.target.value)}
-  className="
-    px-3 py-1
-    bg-black text-yellow-400
-    rounded
-    border border-yellow-400/40
-    focus:outline-none focus:ring-2 focus:ring-yellow-400
-    cursor-pointer
-  "
-  style={{
-    colorScheme: "dark",
-  }}
-/>
+    type="date"
+    value={filterDate}
+    onChange={(e) => setFilterDate(e.target.value)}
+    className="
+      absolute inset-0
+      w-full h-full
+      opacity-0
+      cursor-pointer
+    "
+  />
 
   {filterDate && (
     <button
       onClick={() => setFilterDate("")}
-      className="px-2 py-1 bg-gray-700 text-white rounded text-xs"
+      className="ml-2 px-2 py-1 bg-gray-700 text-white rounded text-xs hover:bg-gray-600 transition"
     >
       Clear
     </button>
@@ -90,7 +98,7 @@ export default function VideoFeed({ records }: any) {
       </div>
 
       {/* ================= FEED ================= */}
-      <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory bg-gradient-to-b from-black to-zinc-900">
+      <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory bg-gradient-to-b from-black to-zinc-900 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found for this date.
@@ -99,7 +107,7 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-start min-h-screen flex flex-col items-center pt-16 md:pt-28 pb-16 px-4 bg-black border border-yellow-400/30"
+              className="snap-start flex flex-col items-center pt-20 pb-10 px-4 bg-black"
             >
               <iframe
                 src={`https://www.tiktok.com/embed/${video.id}`}
