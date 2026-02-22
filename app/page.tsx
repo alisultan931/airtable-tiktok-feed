@@ -12,7 +12,15 @@ async function getVideos() {
   );
 
   const data = await res.json();
-  return data.records;
+
+  // Sort newest first
+  const sortedRecords = data.records.sort(
+    (a: any, b: any) =>
+      new Date(b.fields["Date Added"]).getTime() -
+      new Date(a.fields["Date Added"]).getTime()
+  );
+
+  return sortedRecords;
 }
 
 export default async function Home() {
