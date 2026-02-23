@@ -103,7 +103,7 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-card snap-start min-h-[calc(100vh-60px)] flex flex-col items-center justify-start px-4 py-6"
+              className="snap-card snap-start min-h-[calc(100vh-60px)] scroll-mt-[70px] flex flex-col items-center justify-start px-4 py-6"
             >
               {/* Video */}
               <div className="w-full max-w-md mx-auto rounded-lg overflow-hidden bg-black mb-3">
@@ -132,20 +132,19 @@ export default function VideoFeed({ records }: any) {
               {/* Toggle Info Button */}
               <button
                 onClick={(e) => {
-                  const newKey =
-                    openIndex === video.key ? null : video.key;
+                  const newKey = openIndex === video.key ? null : video.key;
                   setOpenIndex(newKey);
 
                   if (newKey) {
-                    const target =
-                      e.currentTarget.closest(".snap-card");
+                    const card = e.currentTarget.closest(".snap-card");
 
+                    // Wait for expand animation to finish
                     setTimeout(() => {
-                      target?.scrollIntoView({
+                      card?.scrollIntoView({
                         behavior: "smooth",
-                        block: "center",
+                        block: "nearest",
                       });
-                    }, 250);
+                    }, 350);
                   }
                 }}
                 className="mt-2 text-yellow-400 hover:underline"
@@ -157,7 +156,7 @@ export default function VideoFeed({ records }: any) {
               <div
                 className={`overflow-hidden transition-all duration-300 ${
                   openIndex === video.key
-                    ? "max-h-40 opacity-100 mt-2"
+                    ? "max-h-52 opacity-100 mt-2"
                     : "max-h-0 opacity-0"
                 }`}
               >
