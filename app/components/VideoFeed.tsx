@@ -150,10 +150,11 @@ export default function VideoFeed({ records }: any) {
 
             {/* Custom Range */}
             <div className="space-y-3">
-              <p className="text-gray-400 text-sm">Custom Range</p>
+              <p className="text-white font-bold">Custom Range</p>
 
               <div className="flex flex-col gap-3">
                 {/* START DATE */}
+                <p className="text-xs text-yellow-400">Start Date</p>
                 <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
                   <input
                     type="date"
@@ -169,6 +170,7 @@ export default function VideoFeed({ records }: any) {
                 </div>
 
                 {/* END DATE */}
+                <p className="text-xs text-yellow-400">End Date</p>
                 <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
                   <input
                     type="date"
