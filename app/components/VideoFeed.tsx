@@ -92,7 +92,7 @@ export default function VideoFeed({ records }: any) {
       </div>
 
       {/* ================= FEED ================= */}
-      <main className="h-[100vh] overflow-y-scroll snap-y snap-mandatory scroll-pt-[60px] scroll-smooth overscroll-y-contain bg-gradient-to-b from-black to-zinc-900 pt-[60px] pb-20 md:pb-10">
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-15 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-15 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found for this date.
@@ -101,7 +101,7 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-card snap-start min-h-[calc(100vh-60px)] flex items-center justify-center px-4 py-6"
+              className="snap-card snap-start min-h-[calc(100vh-60px)] flex flex-col items-center justify-start px-4 py-6"
             >
               {/* FLIP CARD */}
               <div className="relative w-full max-w-md h-[70vh] perspective">
@@ -111,7 +111,7 @@ export default function VideoFeed({ records }: any) {
                   }`}
                 >
                   {/* FRONT — VIDEO */}
-                  <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black">
+                  <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black flex flex-col">
                     <button
                       onClick={() => setOpenIndex(video.key)}
                       className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center animate-pulse shadow-lg"
@@ -119,12 +119,28 @@ export default function VideoFeed({ records }: any) {
                       i
                     </button>
 
-                    <iframe
-                      src={`https://www.tiktok.com/embed/${video.id}`}
-                      className="w-full h-full"
-                      allowFullScreen
-                      loading="lazy"
-                    />
+                    <div className="flex-1">
+                      <iframe
+                        src={`https://www.tiktok.com/embed/${video.id}`}
+                        className="w-full h-full"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
+                      {video.title}
+                    </h2>
+
+                    {/* Date */}
+                    <p className="text-sm text-gray-400 text-center mb-2">
+                      {new Date(video.date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
                   </div>
 
                   {/* BACK — INFO */}
