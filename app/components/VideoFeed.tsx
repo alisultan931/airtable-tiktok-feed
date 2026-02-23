@@ -1,31 +1,74 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 export default function VideoFeed({ records }: any) {
-  const [filterDate, setFilterDate] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
   const [openIndex, setOpenIndex] = useState<string | null>(null);
 
-  const dateInputRef = useRef<HTMLInputElement>(null);
+  const [dateFilter, setDateFilter] = useState<{
+    type: "all" | "preset" | "range";
+    preset?: string;
+    start?: string;
+    end?: string;
+  }>({ type: "all" });
 
-  /* -----------------------------
-     FILTER RECORDS BY DATE
-  ------------------------------ */
+  /* ---------------- PRESET RANGE HELPER ---------------- */
+  const getPresetRange = (preset: string) => {
+    const today = new Date();
+    const start = new Date();
+    const end = new Date();
+
+    switch (preset) {
+      case "today":
+        break;
+
+      case "7days":
+        start.setDate(today.getDate() - 6);
+        break;
+
+      case "thisMonth":
+        start.setDate(1);
+        break;
+
+      case "lastMonth":
+        start.setMonth(today.getMonth() - 1, 1);
+        end.setMonth(today.getMonth(), 0);
+        break;
+    }
+
+    return {
+      start: start.toLocaleDateString("en-CA"),
+      end: end.toLocaleDateString("en-CA"),
+    };
+  };
+
+  /* ---------------- FILTER RECORDS ---------------- */
   const filteredRecords = useMemo(() => {
     return records.filter((record: any) => {
-      if (!filterDate) return true;
+      if (dateFilter.type === "all") return true;
 
       const dateValue = record.fields["Date Added"];
       if (!dateValue) return false;
 
       const recordDate = new Date(dateValue).toLocaleDateString("en-CA");
-      return recordDate === filterDate;
-    });
-  }, [records, filterDate]);
 
-  /* -----------------------------
-     FLATTEN ALL VIDEOS
-  ------------------------------ */
+      let start = dateFilter.start;
+      let end = dateFilter.end;
+
+      if (dateFilter.type === "preset" && dateFilter.preset) {
+        const range = getPresetRange(dateFilter.preset);
+        start = range.start;
+        end = range.end;
+      }
+
+      if (!start || !end) return true;
+
+      return recordDate >= start && recordDate <= end;
+    });
+  }, [records, dateFilter]);
+
+  /* ---------------- FLATTEN VIDEOS ---------------- */
   const videos = useMemo(() => {
     return filteredRecords.flatMap((record: any, recordIndex: number) => {
       const urls =
@@ -35,7 +78,6 @@ export default function VideoFeed({ records }: any) {
         .map((url: string, urlIndex: number) => {
           const match = url.match(/video\/(\d+)/);
           const id = match ? match[1] : null;
-
           if (!id) return null;
 
           return {
@@ -55,66 +97,132 @@ export default function VideoFeed({ records }: any) {
       {/* ================= HEADER ================= */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-400 text-black px-4 py-2 shadow-md">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg md:text-2xl font-black tracking-tight uppercase">
+          <h1 className="text-lg md:text-2xl font-black uppercase">
             Mojo’s Daily TikTok Dig
           </h1>
 
-          <div className="flex items-center gap-2 relative">
-            <div className="relative">
-              <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm">
-                {filterDate
-                  ? new Date(filterDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  : "FILTER BY DATE"}
-              </div>
-
-              <input
-                type="date"
-                value={filterDate}
-                onChange={(e) => setFilterDate(e.target.value)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-            </div>
-
-            {filterDate && (
-              <button
-                onClick={() => setFilterDate("")}
-                className="px-3 py-1 bg-black text-yellow-400 rounded hover:bg-zinc-900 transition text-sm"
-              >
-                Clear
-              </button>
-            )}
-          </div>
+          <button
+            onClick={() => setShowFilter(true)}
+            className="px-3 py-1 bg-black text-yellow-400 rounded text-sm"
+          >
+            Filter
+          </button>
         </div>
       </div>
 
+      {/* ================= FILTER MODAL ================= */}
+      {showFilter && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center">
+          <div className="bg-zinc-900 w-full md:w-105 rounded-t-2xl md:rounded-2xl p-5 space-y-4">
+
+            {/* Title */}
+            <div className="flex justify-between items-center">
+              <h3 className="text-white font-bold text-lg">
+                Filter Videos
+              </h3>
+              <button
+                onClick={() => setShowFilter(false)}
+                className="text-yellow-400 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Quick Presets */}
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                ["today", "Today"],
+                ["7days", "Last 7 Days"],
+                ["thisMonth", "This Month"],
+                ["lastMonth", "Last Month"],
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  onClick={() =>
+                    setDateFilter({ type: "preset", preset: value })
+                  }
+                  className="bg-black text-yellow-400 py-2 rounded text-sm"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Range */}
+            <div className="space-y-2">
+              <p className="text-gray-400 text-sm">Custom Range</p>
+
+              <input
+                type="date"
+                onChange={(e) =>
+                  setDateFilter((prev) => ({
+                    ...prev,
+                    type: "range",
+                    start: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 rounded bg-black text-yellow-400"
+              />
+
+              <input
+                type="date"
+                onChange={(e) =>
+                  setDateFilter((prev) => ({
+                    ...prev,
+                    type: "range",
+                    end: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 rounded bg-black text-yellow-400"
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  setDateFilter({ type: "all" });
+                  setShowFilter(false);
+                }}
+                className="flex-1 bg-zinc-700 text-white py-2 rounded"
+              >
+                Clear
+              </button>
+
+              <button
+                onClick={() => setShowFilter(false)}
+                className="flex-1 bg-yellow-400 text-black py-2 rounded font-semibold"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ================= FEED ================= */}
-      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-15 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-15 pb-20 md:pb-10">
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-16 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
-            No videos found for this date.
+            No videos found.
           </p>
         ) : (
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-card snap-start min-h-[calc(100vh-60px)] flex flex-col items-center justify-start px-4 py-6"
+              className="snap-start min-h-[calc(100vh-60px)] flex flex-col items-center px-4 py-6"
             >
-              {/* FLIP CARD */}
               <div className="relative w-full max-w-md h-[70vh] perspective">
                 <div
                   className={`relative w-full h-full transition-transform duration-500 preserve-3d ${
                     openIndex === video.key ? "rotate-y-180" : ""
                   }`}
                 >
-                  {/* FRONT — VIDEO */}
+                  {/* FRONT */}
                   <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black flex flex-col">
                     <button
                       onClick={() => setOpenIndex(video.key)}
-                      className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center animate-pulse shadow-lg"
+                      className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center shadow-lg"
                     >
                       i
                     </button>
@@ -128,12 +236,10 @@ export default function VideoFeed({ records }: any) {
                       />
                     </div>
 
-                    {/* Title */}
                     <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
                       {video.title}
                     </h2>
 
-                    {/* Date */}
                     <p className="text-sm text-gray-400 text-center mb-2">
                       {new Date(video.date).toLocaleDateString("en-US", {
                         month: "short",
@@ -143,7 +249,7 @@ export default function VideoFeed({ records }: any) {
                     </p>
                   </div>
 
-                  {/* BACK — INFO */}
+                  {/* BACK */}
                   <div className="absolute w-full h-full rotate-y-180 backface-hidden bg-black text-white rounded-lg p-6 flex flex-col justify-center text-center">
                     <button
                       onClick={() => setOpenIndex(null)}
