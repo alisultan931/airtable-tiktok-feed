@@ -60,7 +60,6 @@ export default function VideoFeed({ records }: any) {
           </h1>
 
           <div className="flex items-center gap-2 relative">
-            {/* Date Filter Button */}
             <div className="relative">
               <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm">
                 {filterDate
@@ -80,7 +79,6 @@ export default function VideoFeed({ records }: any) {
               />
             </div>
 
-            {/* Clear Button */}
             {filterDate && (
               <button
                 onClick={() => setFilterDate("")}
@@ -103,53 +101,58 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-card snap-start min-h-[calc(100vh-60px)] flex flex-col items-center justify-start px-4 py-6"
+              className="snap-card snap-start min-h-[calc(100vh-60px)] flex items-center justify-center px-4 py-6"
             >
-              {/* Video */}
-              <div className="w-full max-w-md mx-auto rounded-lg overflow-hidden bg-black mb-3">
-                <iframe
-                  src={`https://www.tiktok.com/embed/${video.id}`}
-                  className="w-full h-[50vh] md:h-[580px]"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
+              {/* FLIP CARD */}
+              <div className="relative w-full max-w-md h-[70vh] perspective">
+                <div
+                  className={`relative w-full h-full transition-transform duration-500 preserve-3d ${
+                    openIndex === video.key ? "rotate-y-180" : ""
+                  }`}
+                >
+                  {/* FRONT — VIDEO */}
+                  <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black">
+                    <button
+                      onClick={() => setOpenIndex(video.key)}
+                      className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center animate-pulse shadow-lg"
+                    >
+                      i
+                    </button>
 
-              {/* Title */}
-              <h2 className="border-b-2 border-yellow-400 pb-1 text-xl font-bold mt-4 text-white text-center">
-                {video.title}
-              </h2>
+                    <iframe
+                      src={`https://www.tiktok.com/embed/${video.id}`}
+                      className="w-full h-full"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
 
-              {/* Date */}
-              <p className="text-sm text-gray-400">
-                {new Date(video.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
+                  {/* BACK — INFO */}
+                  <div className="absolute w-full h-full rotate-y-180 backface-hidden bg-black text-white rounded-lg p-6 flex flex-col justify-center text-center">
+                    <button
+                      onClick={() => setOpenIndex(null)}
+                      className="absolute top-3 right-3 text-yellow-400 text-xl"
+                    >
+                      ✕
+                    </button>
 
-              {/* Toggle Info Button */}
-              <button
-                onClick={() =>
-                  setOpenIndex(openIndex === video.key ? null : video.key)
-                }
-                className="mt-2 text-yellow-400 hover:underline"
-              >
-                {openIndex === video.key ? "Hide Info" : "Show Info"}
-              </button>
+                    <h2 className="text-xl font-bold mb-3">
+                      {video.title}
+                    </h2>
 
-              {/* Animated Description */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  (openIndex === video.key
-                    ? "max-h-[500px] opacity-100 mt-2"
-                    : "max-h-0 opacity-0")
-                }`}
-              >
-                <p className="text-gray-400 max-w-lg mx-auto text-center leading-relaxed px-2 text-sm md:text-base">
-                  {video.insight}
-                </p>
+                    <p className="text-gray-400 leading-relaxed">
+                      {video.insight}
+                    </p>
+
+                    <p className="text-sm text-gray-500 mt-4">
+                      {new Date(video.date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           ))
