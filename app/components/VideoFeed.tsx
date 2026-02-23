@@ -60,41 +60,36 @@ export default function VideoFeed({ records }: any) {
           </h1>
 
           <div className="flex items-center gap-2 relative">
+            {/* Date Filter Button */}
+            <div className="relative">
+              <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm">
+                {filterDate
+                  ? new Date(filterDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : "FILTER BY DATE"}
+              </div>
 
-  {/* Wrapper ONLY for the date button */}
-  <div className="relative">
+              <input
+                type="date"
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </div>
 
-    {/* Visible Styled Button */}
-    <div className="px-3 py-1 bg-black text-yellow-400 rounded text-sm">
-      {filterDate
-        ? new Date(filterDate).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })
-        : "FILTER BY DATE"}
-    </div>
-
-    {/* Native input only covering button */}
-    <input
-      type="date"
-      value={filterDate}
-      onChange={(e) => setFilterDate(e.target.value)}
-      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-    />
-  </div>
-
-  {/* Clear button OUTSIDE overlay */}
-  {filterDate && (
-    <button
-      onClick={() => setFilterDate("")}
-      className="px-3 py-1 bg-black text-yellow-400 rounded hover:bg-zinc-900 transition text-sm"
-    >
-      Clear
-    </button>
-  )}
-
-</div>
+            {/* Clear Button */}
+            {filterDate && (
+              <button
+                onClick={() => setFilterDate("")}
+                className="px-3 py-1 bg-black text-yellow-400 rounded hover:bg-zinc-900 transition text-sm"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -108,21 +103,24 @@ export default function VideoFeed({ records }: any) {
           videos.map((video: any) => (
             <div
               key={video.key}
-              className="snap-center flex flex-col items-center px-4 py-8"
+              className="snap-card snap-center flex flex-col items-center px-4 py-8 scroll-mt-24"
             >
-            <div className="w-full max-w-md mx-auto rounded-lg overflow-hidden bg-black">
-              <iframe
-                src={`https://www.tiktok.com/embed/${video.id}`}
-                className="w-full h-[65vh] md:h-[580px]"
-                allowFullScreen
-                loading="lazy"
-              />
+              {/* Video */}
+              <div className="w-full max-w-md mx-auto rounded-lg overflow-hidden bg-black mb-3">
+                <iframe
+                  src={`https://www.tiktok.com/embed/${video.id}`}
+                  className="w-full h-[55vh] md:h-[580px]"
+                  allowFullScreen
+                  loading="lazy"
+                />
               </div>
 
+              {/* Title */}
               <h2 className="border-b-2 border-yellow-400 pb-1 text-xl font-bold mt-4 text-white text-center">
                 {video.title}
               </h2>
 
+              {/* Date */}
               <p className="text-sm text-gray-400">
                 {new Date(video.date).toLocaleDateString("en-US", {
                   month: "short",
@@ -131,24 +129,25 @@ export default function VideoFeed({ records }: any) {
                 })}
               </p>
 
-              {/* Toggle Button */}
+              {/* Toggle Info Button */}
               <button
                 onClick={(e) => {
-  const newKey = openIndex === video.key ? null : video.key;
-  setOpenIndex(newKey);
+                  const newKey =
+                    openIndex === video.key ? null : video.key;
+                  setOpenIndex(newKey);
 
-  if (newKey) {
-    const target = e.currentTarget; // store BEFORE timeout
+                  if (newKey) {
+                    const target =
+                      e.currentTarget.closest(".snap-card");
 
-    setTimeout(() => {
-      const card = target?.closest(".snap-card");
-      card?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 200);
-  }
-}}
+                    setTimeout(() => {
+                      target?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                    }, 250);
+                  }
+                }}
                 className="mt-2 text-yellow-400 hover:underline"
               >
                 {openIndex === video.key ? "Hide Info" : "Show Info"}
