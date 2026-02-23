@@ -149,32 +149,40 @@ export default function VideoFeed({ records }: any) {
             </div>
 
             {/* Custom Range */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="text-gray-400 text-sm">Custom Range</p>
 
-              <input
-                type="date"
-                onChange={(e) =>
-                  setDateFilter((prev) => ({
-                    ...prev,
-                    type: "range",
-                    start: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 rounded bg-black text-yellow-400"
-              />
+              <div className="flex flex-col gap-3">
+                {/* START DATE */}
+                <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
+                  <input
+                    type="date"
+                    onChange={(e) =>
+                      setDateFilter((prev) => ({
+                        ...prev,
+                        type: "range",
+                        start: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 text-black bg-white appearance-none outline-none"
+                  />
+                </div>
 
-              <input
-                type="date"
-                onChange={(e) =>
-                  setDateFilter((prev) => ({
-                    ...prev,
-                    type: "range",
-                    end: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 rounded bg-black text-yellow-400"
-              />
+                {/* END DATE */}
+                <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
+                  <input
+                    type="date"
+                    onChange={(e) =>
+                      setDateFilter((prev) => ({
+                        ...prev,
+                        type: "range",
+                        end: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 text-black bg-white appearance-none outline-none"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Actions */}
