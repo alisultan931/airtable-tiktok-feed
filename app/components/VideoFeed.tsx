@@ -131,23 +131,9 @@ export default function VideoFeed({ records }: any) {
 
               {/* Toggle Info Button */}
               <button
-                onClick={(e) => {
-                  const newKey =
-                    openIndex === video.key ? null : video.key;
-                  setOpenIndex(newKey);
-
-                  if (newKey) {
-                    const target =
-                      e.currentTarget.closest(".snap-card");
-
-                    setTimeout(() => {
-                      target?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                    }, 250);
-                  }
-                }}
+                onClick={() =>
+                  setOpenIndex(openIndex === video.key ? null : video.key)
+                }
                 className="mt-2 text-yellow-400 hover:underline"
               >
                 {openIndex === video.key ? "Hide Info" : "Show Info"}
@@ -156,10 +142,9 @@ export default function VideoFeed({ records }: any) {
               {/* Animated Description */}
               <div
                 className={`overflow-hidden transition-all duration-300 ${
-                  "min-h-[80px] mt-2 " +
                   (openIndex === video.key
-                    ? "opacity-100"
-                    : "opacity-0")
+                    ? "max-h-[500px] opacity-100 mt-2"
+                    : "max-h-0 opacity-0")
                 }`}
               >
                 <p className="text-gray-400 max-w-lg mx-auto text-center leading-relaxed px-2 text-sm md:text-base">
