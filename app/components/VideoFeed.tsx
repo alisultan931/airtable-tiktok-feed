@@ -94,7 +94,7 @@ export default function VideoFeed({ records }: any) {
       </div>
 
       {/* ================= FEED ================= */}
-      <main className="mt-[60px] h-[calc(100vh-60px)] overflow-y-scroll snap-y snap-mandatory scroll-pt-[60px] scroll-smooth overscroll-y-contain bg-gradient-to-b from-black to-zinc-900 pb-20 md:pb-10">
+      <main className="h-[100vh] overflow-y-scroll snap-y snap-mandatory scroll-pt-[60px] scroll-smooth overscroll-y-contain bg-gradient-to-b from-black to-zinc-900 pt-[60px] pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found for this date.
