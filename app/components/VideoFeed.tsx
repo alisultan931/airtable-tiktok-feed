@@ -156,9 +156,10 @@ export default function VideoFeed({ records }: any) {
               {/* Animated Description */}
               <div
                 className={`overflow-hidden transition-all duration-300 ${
-                  openIndex === video.key
-                    ? "max-h-40 opacity-100 mt-2"
-                    : "max-h-0 opacity-0"
+                  "min-h-[80px] mt-2 " +
+                  (openIndex === video.key
+                    ? "opacity-100"
+                    : "opacity-0")
                 }`}
               >
                 <p className="text-gray-400 max-w-lg mx-auto text-center leading-relaxed px-2 text-sm md:text-base">
