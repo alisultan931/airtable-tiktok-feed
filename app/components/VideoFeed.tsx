@@ -108,8 +108,8 @@ export default function VideoFeed({ records }: any) {
 
       {/* FILTER MODAL */}
       {showFilter && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center overflow-hidden">
-          <div className="bg-zinc-900 w-full max-w-md mx-auto rounded-t-2xl md:rounded-2xl p-5 space-y-4 box-border">
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center overflow-x-hidden px-2">
+          <div className="bg-zinc-900 w-full max-w-md rounded-t-2xl md:rounded-2xl p-5 space-y-4 box-border overflow-hidden">
             <div className="flex justify-between items-center">
               <h3 className="text-white font-bold text-lg">Filter Videos</h3>
               <button
@@ -153,32 +153,36 @@ export default function VideoFeed({ records }: any) {
               <p className="text-white font-bold">Custom Range</p>
 
               <p className="text-xs text-yellow-400">Start Date</p>
-              <input
-                type="date"
-                value={draftFilter.start || ""}
-                onChange={(e) =>
-                  setDraftFilter((prev: any) => ({
-                    ...prev,
-                    type: "range",
-                    start: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 text-black bg-white rounded"
-              />
+              <div className="w-full min-w-0 overflow-hidden rounded border border-zinc-700 bg-white">
+                <input
+                  type="date"
+                  value={draftFilter.start || ""}
+                  onChange={(e) =>
+                    setDraftFilter((prev: any) => ({
+                      ...prev,
+                      type: "range",
+                      start: e.target.value,
+                    }))
+                  }
+                  className="block w-full min-w-0 px-3 py-2 text-black bg-white outline-none"
+                />
+              </div>
 
               <p className="text-xs text-yellow-400">End Date</p>
-              <input
-                type="date"
-                value={draftFilter.end || ""}
-                onChange={(e) =>
-                  setDraftFilter((prev: any) => ({
-                    ...prev,
-                    type: "range",
-                    end: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 text-black bg-white rounded"
-              />
+              <div className="w-full min-w-0 overflow-hidden rounded border border-zinc-700 bg-white">
+                <input
+                  type="date"
+                  value={draftFilter.end || ""}
+                  onChange={(e) =>
+                    setDraftFilter((prev: any) => ({
+                      ...prev,
+                      type: "range",
+                      end: e.target.value,
+                    }))
+                  }
+                  className="block w-full min-w-0 px-3 py-2 text-black bg-white outline-none"
+                />
+              </div>
             </div>
 
             {/* ACTIONS */}
