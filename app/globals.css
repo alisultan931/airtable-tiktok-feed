@@ -54,3 +54,7 @@ html {
     transform: rotateY(180deg);
   }
 }
+
+html, body {
+  overflow-x: hidden;
+}

@@ -108,8 +108,8 @@ export default function VideoFeed({ records }: any) {
 
       {/* FILTER MODAL */}
       {showFilter && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center">
-          <div className="bg-zinc-900 w-full md:w-105 rounded-t-2xl md:rounded-2xl p-5 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center overflow-hidden">
+          <div className="bg-zinc-900 w-full max-w-md mx-auto rounded-t-2xl md:rounded-2xl p-5 space-y-4 box-border">
             <div className="flex justify-between items-center">
               <h3 className="text-white font-bold text-lg">Filter Videos</h3>
               <button
