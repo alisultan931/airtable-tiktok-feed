@@ -6,12 +6,8 @@ export default function VideoFeed({ records }: any) {
   const [showFilter, setShowFilter] = useState(false);
   const [openIndex, setOpenIndex] = useState<string | null>(null);
 
-  const [dateFilter, setDateFilter] = useState<{
-    type: "all" | "preset" | "range";
-    preset?: string;
-    start?: string;
-    end?: string;
-  }>({ type: "all" });
+  const [dateFilter, setDateFilter] = useState<any>({ type: "all" });
+  const [draftFilter, setDraftFilter] = useState<any>(dateFilter);
 
   /* ---------------- PRESET RANGE HELPER ---------------- */
   const getPresetRange = (preset: string) => {
@@ -22,15 +18,12 @@ export default function VideoFeed({ records }: any) {
     switch (preset) {
       case "today":
         break;
-
       case "7days":
         start.setDate(today.getDate() - 6);
         break;
-
       case "thisMonth":
         start.setDate(1);
         break;
-
       case "lastMonth":
         start.setMonth(today.getMonth() - 1, 1);
         end.setMonth(today.getMonth(), 0);
@@ -94,7 +87,7 @@ export default function VideoFeed({ records }: any) {
 
   return (
     <>
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-400 text-black px-4 py-2 shadow-md">
         <div className="flex items-center justify-between">
           <h1 className="text-lg md:text-2xl font-black uppercase">
@@ -102,7 +95,10 @@ export default function VideoFeed({ records }: any) {
           </h1>
 
           <button
-            onClick={() => setShowFilter(true)}
+            onClick={() => {
+              setDraftFilter(dateFilter);
+              setShowFilter(true);
+            }}
             className="px-3 py-1 bg-black text-yellow-400 rounded text-sm"
           >
             Filter
@@ -110,16 +106,12 @@ export default function VideoFeed({ records }: any) {
         </div>
       </div>
 
-      {/* ================= FILTER MODAL ================= */}
+      {/* FILTER MODAL */}
       {showFilter && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center">
           <div className="bg-zinc-900 w-full md:w-105 rounded-t-2xl md:rounded-2xl p-5 space-y-4">
-
-            {/* Title */}
             <div className="flex justify-between items-center">
-              <h3 className="text-white font-bold text-lg">
-                Filter Videos
-              </h3>
+              <h3 className="text-white font-bold text-lg">Filter Videos</h3>
               <button
                 onClick={() => setShowFilter(false)}
                 className="text-yellow-400 text-xl"
@@ -128,7 +120,7 @@ export default function VideoFeed({ records }: any) {
               </button>
             </div>
 
-            {/* Quick Presets */}
+            {/* PRESETS */}
             <div className="grid grid-cols-2 gap-2">
               {[
                 ["today", "Today"],
@@ -138,60 +130,64 @@ export default function VideoFeed({ records }: any) {
               ].map(([value, label]) => (
                 <button
                   key={value}
-                  onClick={() =>
-                    setDateFilter({ type: "preset", preset: value })
-                  }
-                  className="bg-black text-yellow-400 py-2 rounded text-sm"
+                  onClick={() => {
+                    const newFilter = { type: "preset", preset: value };
+                    setDateFilter(newFilter);
+                    setDraftFilter(newFilter);
+                    setShowFilter(false);
+                  }}
+                  className={`py-2 rounded text-sm transition ${
+                    dateFilter.type === "preset" &&
+                    dateFilter.preset === value
+                      ? "bg-yellow-400 text-black"
+                      : "bg-black text-yellow-400"
+                  }`}
                 >
                   {label}
                 </button>
               ))}
             </div>
 
-            {/* Custom Range */}
+            {/* CUSTOM RANGE */}
             <div className="space-y-3">
               <p className="text-white font-bold">Custom Range</p>
 
-              <div className="flex flex-col gap-3">
-                {/* START DATE */}
-                <p className="text-xs text-yellow-400">Start Date</p>
-                <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
-                  <input
-                    type="date"
-                    onChange={(e) =>
-                      setDateFilter((prev) => ({
-                        ...prev,
-                        type: "range",
-                        start: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 text-black bg-white appearance-none outline-none"
-                  />
-                </div>
+              <p className="text-xs text-yellow-400">Start Date</p>
+              <input
+                type="date"
+                value={draftFilter.start || ""}
+                onChange={(e) =>
+                  setDraftFilter((prev: any) => ({
+                    ...prev,
+                    type: "range",
+                    start: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 text-black bg-white rounded"
+              />
 
-                {/* END DATE */}
-                <p className="text-xs text-yellow-400">End Date</p>
-                <div className="rounded-lg overflow-hidden border border-zinc-700 bg-white">
-                  <input
-                    type="date"
-                    onChange={(e) =>
-                      setDateFilter((prev) => ({
-                        ...prev,
-                        type: "range",
-                        end: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 text-black bg-white appearance-none outline-none"
-                  />
-                </div>
-              </div>
+              <p className="text-xs text-yellow-400">End Date</p>
+              <input
+                type="date"
+                value={draftFilter.end || ""}
+                onChange={(e) =>
+                  setDraftFilter((prev: any) => ({
+                    ...prev,
+                    type: "range",
+                    end: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 text-black bg-white rounded"
+              />
             </div>
 
-            {/* Actions */}
+            {/* ACTIONS */}
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => {
-                  setDateFilter({ type: "all" });
+                  const cleared = { type: "all" };
+                  setDateFilter(cleared);
+                  setDraftFilter(cleared);
                   setShowFilter(false);
                 }}
                 className="flex-1 bg-zinc-700 text-white py-2 rounded"
@@ -200,7 +196,12 @@ export default function VideoFeed({ records }: any) {
               </button>
 
               <button
-                onClick={() => setShowFilter(false)}
+                onClick={() => {
+                  if (draftFilter.type === "range") {
+                    setDateFilter(draftFilter);
+                  }
+                  setShowFilter(false);
+                }}
                 className="flex-1 bg-yellow-400 text-black py-2 rounded font-semibold"
               >
                 Apply
@@ -210,8 +211,8 @@ export default function VideoFeed({ records }: any) {
         </div>
       )}
 
-      {/* ================= FEED ================= */}
-      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-16 pb-20 md:pb-10">
+      {/* FEED */}
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 pt-16 pb-20 md:pb-10 bg-linear-to-b from-black to-zinc-900">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found.
@@ -222,69 +223,25 @@ export default function VideoFeed({ records }: any) {
               key={video.key}
               className="snap-start min-h-[calc(100vh-60px)] flex flex-col items-center px-4 py-6"
             >
-              <div className="relative w-full max-w-md h-[70vh] perspective">
-                <div
-                  className={`relative w-full h-full transition-transform duration-500 preserve-3d ${
-                    openIndex === video.key ? "rotate-y-180" : ""
-                  }`}
-                >
-                  {/* FRONT */}
-                  <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black flex flex-col">
-                    <button
-                      onClick={() => setOpenIndex(video.key)}
-                      className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center shadow-lg"
-                    >
-                      i
-                    </button>
+              <div className="relative w-full max-w-md h-[70vh]">
+                <iframe
+                  src={`https://www.tiktok.com/embed/${video.id}`}
+                  className="w-full h-full rounded-lg"
+                  allowFullScreen
+                  loading="lazy"
+                />
 
-                    <div className="flex-1">
-                      <iframe
-                        src={`https://www.tiktok.com/embed/${video.id}`}
-                        className="w-full h-full"
-                        allowFullScreen
-                        loading="lazy"
-                      />
-                    </div>
+                <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
+                  {video.title}
+                </h2>
 
-                    <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
-                      {video.title}
-                    </h2>
-
-                    <p className="text-sm text-gray-400 text-center mb-2">
-                      {new Date(video.date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-
-                  {/* BACK */}
-                  <div className="absolute w-full h-full rotate-y-180 backface-hidden bg-black text-white rounded-lg p-6 flex flex-col justify-center text-center">
-                    <button
-                      onClick={() => setOpenIndex(null)}
-                      className="absolute top-3 right-3 text-yellow-400 text-xl"
-                    >
-                      ✕
-                    </button>
-
-                    <h2 className="text-xl font-bold mb-3">
-                      {video.title}
-                    </h2>
-
-                    <p className="text-gray-400 leading-relaxed">
-                      {video.insight}
-                    </p>
-
-                    <p className="text-sm text-gray-500 mt-4">
-                      {new Date(video.date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </div>
+                <p className="text-sm text-gray-400 text-center mb-2">
+                  {new Date(video.date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
             </div>
           ))
