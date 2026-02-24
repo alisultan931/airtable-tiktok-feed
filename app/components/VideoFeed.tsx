@@ -212,7 +212,7 @@ export default function VideoFeed({ records }: any) {
       )}
 
       {/* FEED */}
-      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 pt-16 pb-20 md:pb-10 bg-linear-to-b from-black to-zinc-900">
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-16 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found.
@@ -223,25 +223,69 @@ export default function VideoFeed({ records }: any) {
               key={video.key}
               className="snap-start min-h-[calc(100vh-60px)] flex flex-col items-center px-4 py-6"
             >
-              <div className="relative w-full max-w-md h-[70vh]">
-                <iframe
-                  src={`https://www.tiktok.com/embed/${video.id}`}
-                  className="w-full h-full rounded-lg"
-                  allowFullScreen
-                  loading="lazy"
-                />
+              <div className="relative w-full max-w-md h-[70vh] perspective">
+                <div
+                  className={`relative w-full h-full transition-transform duration-500 preserve-3d ${
+                    openIndex === video.key ? "rotate-y-180" : ""
+                  }`}
+                >
+                  {/* FRONT */}
+                  <div className="absolute w-full h-full backface-hidden rounded-lg overflow-hidden bg-black flex flex-col">
+                    <button
+                      onClick={() => setOpenIndex(video.key)}
+                      className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-yellow-400 text-black flex items-center justify-center shadow-lg"
+                    >
+                      i
+                    </button>
 
-                <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
-                  {video.title}
-                </h2>
+                    <div className="flex-1">
+                      <iframe
+                        src={`https://www.tiktok.com/embed/${video.id}`}
+                        className="w-full h-full"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
 
-                <p className="text-sm text-gray-400 text-center mb-2">
-                  {new Date(video.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
+                    <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
+                      {video.title}
+                    </h2>
+
+                    <p className="text-sm text-gray-400 text-center mb-2">
+                      {new Date(video.date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+
+                  {/* BACK */}
+                  <div className="absolute w-full h-full rotate-y-180 backface-hidden bg-black text-white rounded-lg p-6 flex flex-col justify-center text-center">
+                    <button
+                      onClick={() => setOpenIndex(null)}
+                      className="absolute top-3 right-3 text-yellow-400 text-xl"
+                    >
+                      ✕
+                    </button>
+
+                    <h2 className="text-xl font-bold mb-3">
+                      {video.title}
+                    </h2>
+
+                    <p className="text-gray-400 leading-relaxed">
+                      {video.insight}
+                    </p>
+
+                    <p className="text-sm text-gray-500 mt-4">
+                      {new Date(video.date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           ))
