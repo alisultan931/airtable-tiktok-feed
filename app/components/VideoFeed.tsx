@@ -85,6 +85,38 @@ export default function VideoFeed({ records }: any) {
     });
   }, [filteredRecords]);
 
+  /* ---------------- ACTIVE FILTER LABEL ---------------- */
+const getActiveFilterLabel = () => {
+  if (dateFilter.type === "all") return "All Dates";
+
+  if (dateFilter.type === "preset") {
+    switch (dateFilter.preset) {
+      case "today":
+        return "Today";
+      case "7days":
+        return "Last 7 Days";
+      case "thisMonth":
+        return "This Month";
+      case "lastMonth":
+        return "Last Month";
+      default:
+        return "Filtered";
+    }
+  }
+
+  if (dateFilter.type === "range" && dateFilter.start && dateFilter.end) {
+    const format = (d: string) =>
+      new Date(d).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
+    return `${format(dateFilter.start)} – ${format(dateFilter.end)}`;
+  }
+
+  return "Filtered";
+};
+
   return (
     <>
       {/* HEADER */}
@@ -99,9 +131,23 @@ export default function VideoFeed({ records }: any) {
               setDraftFilter(dateFilter);
               setShowFilter(true);
             }}
-            className="px-3 py-1 bg-black text-yellow-400 rounded text-sm"
+            className="px-3 py-1 bg-black text-yellow-400 rounded text-sm flex items-center gap-2"
           >
-            Filter
+            <span>{getActiveFilterLabel()}</span>
+
+            {dateFilter.type !== "all" && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const cleared = { type: "all" };
+                  setDateFilter(cleared);
+                  setDraftFilter(cleared);
+                }}
+                className="text-xs bg-yellow-400 text-black px-1 rounded"
+              >
+                ✕
+              </span>
+            )}
           </button>
         </div>
       </div>
