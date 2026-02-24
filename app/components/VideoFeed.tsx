@@ -246,6 +246,7 @@ export default function VideoFeed({ records }: any) {
                       <iframe
                         src={`https://www.tiktok.com/embed/${video.id}`}
                         className="w-full h-full"
+                        allow="autoplay; fullscreen"
                         allowFullScreen
                         loading="lazy"
                       />
