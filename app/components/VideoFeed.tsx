@@ -6,6 +6,7 @@ export default function VideoFeed({ records }: any) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [showFilter, setShowFilter] = useState(false);
   const [openIndex, setOpenIndex] = useState<string | null>(null);
+  const [visibleVideo, setVisibleVideo] = useState<string | null>(null);
 
   const [dateFilter, setDateFilter] = useState<any>({ type: "all" });
   const [draftFilter, setDraftFilter] = useState<any>(dateFilter);
@@ -126,6 +127,25 @@ const getActiveFilterLabel = () => {
       });
     }
   }, [dateFilter]);
+
+    useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const key = entry.target.getAttribute("data-key");
+          if (key) setVisibleVideo(key);
+        }
+      });
+    },
+    { threshold: 0.6 }
+  );
+
+  const elements = document.querySelectorAll("[data-video]");
+  elements.forEach((el) => observer.observe(el));
+
+  return () => observer.disconnect();
+}, [videos]);
 
   return (
     <>
@@ -284,6 +304,8 @@ const getActiveFilterLabel = () => {
           videos.map((video: any) => (
             <div
               key={video.key}
+              data-video
+              data-key={video.key}
               className="snap-start min-h-[calc(100vh-60px)] flex flex-col items-center px-4 py-6"
             >
               <div className="relative w-full max-w-md h-[70vh] perspective">
@@ -302,13 +324,18 @@ const getActiveFilterLabel = () => {
                     </button>
 
                     <div className="flex-1">
-                      <iframe
-                        src={`https://www.tiktok.com/embed/${video.id}`}
-                        className="w-full h-full"
-                        allow="autoplay; fullscreen"
-                        allowFullScreen
-                        loading="lazy"
-                      />
+                      {visibleVideo === video.key ? (
+                        <iframe
+                          src={`https://www.tiktok.com/embed/${video.id}`}
+                          className="w-full h-full"
+                          allow="autoplay; fullscreen"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-black flex items-center justify-center text-gray-400">
+                          Loading video…
+                        </div>
+                      )}
                     </div>
 
                     <h2 className="border-b-2 border-yellow-400 pb-1 text-lg font-bold mt-3 text-white text-center px-2">
