@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 
 export default function VideoFeed({ records }: any) {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [showFilter, setShowFilter] = useState(false);
   const [openIndex, setOpenIndex] = useState<string | null>(null);
 
@@ -117,15 +116,6 @@ const getActiveFilterLabel = () => {
 
   return "Filtered";
 };
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: 0,
-        behavior: "instant",
-      });
-    }
-  }, [dateFilter]);
 
   return (
     <>
@@ -272,10 +262,7 @@ const getActiveFilterLabel = () => {
       )}
 
       {/* FEED */}
-      <main
-        ref={scrollRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-16 pb-20 md:pb-10"
-      >
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-pt-16 scroll-smooth overscroll-y-contain bg-linear-to-b from-black to-zinc-900 pt-16 pb-20 md:pb-10">
         {videos.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             No videos found.
