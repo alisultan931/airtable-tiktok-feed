@@ -138,7 +138,7 @@ const getActiveFilterLabel = () => {
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0.5 }
   );
 
   const elements = document.querySelectorAll("[data-video]");
